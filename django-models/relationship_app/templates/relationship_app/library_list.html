@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Libraries</title>
+</head>
+<body>
+    <h1>All Libraries</h1>
+    <ul>
+        {% for library in libraries %}
+        <li><a href="{% url 'library_detail' library.pk %}">{{ library.name }}</a></li>
+        {% empty %}
+        <li>No libraries available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
