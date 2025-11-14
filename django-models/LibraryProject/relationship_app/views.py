@@ -2,18 +2,12 @@ from django.shortcuts import render
 from django.views.generic import DetailView
 from .models import Book, Library
 
-# ----------------------------------------
-# FUNCTION-BASED VIEW: LIST ALL BOOKS
-# ----------------------------------------
+# FUNCTION-BASED VIEW
 def list_books(request):
-    books = Book.objects.all()   # <-- Checker is looking for this
+    books = Book.objects.all()
     return render(request, "relationship_app/list_books.html", {"books": books})
-    # <-- Checker expects this exact template path
 
-
-# ----------------------------------------
-# CLASS-BASED VIEW: LIBRARY DETAIL
-# ----------------------------------------
+# CLASS-BASED VIEW
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
