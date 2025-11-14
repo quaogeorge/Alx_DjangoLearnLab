@@ -1,20 +1,3 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView
-from .models import Book, Library
+from django.shortcuts import render
 
-def list_books(request):
-    books = Book.objects.select_related('author').all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})
-
-class LibraryListView(ListView):
-    model = Library
-    template_name = 'relationship_app/library_list.html'
-    context_object_name = 'libraries'
-
-class LibraryDetailView(DetailView):
-    model = Library
-    template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'
-
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related('books__author')
+# Create your views here.
