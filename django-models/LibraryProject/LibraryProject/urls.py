@@ -13,7 +13,7 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+
 from django.contrib import admin
 from django.urls import path, include
 
@@ -21,4 +21,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('relationship_app.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+]
+"""
+from django.urls import path
+from .views.admin_view import admin_dashboard
+from .views.librarian_view import librarian_dashboard
+from .views.member_view import member_dashboard
+
+app_name = "relationship_app"
+
+urlpatterns = [
+    path('admin-dashboard/', admin_dashboard, name='admin-dashboard'),
+    path('librarian-dashboard/', librarian_dashboard, name='librarian-dashboard'),
+    path('member-dashboard/', member_dashboard, name='member-dashboard'),
 ]
