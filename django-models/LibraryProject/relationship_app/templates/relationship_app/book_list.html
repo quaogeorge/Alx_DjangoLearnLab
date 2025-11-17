@@ -1,0 +1,12 @@
+<h1>Books</h1>
+<ul>
+{% for b in books %}
+  <li><a href="{% url 'book-detail' b.pk %}">{{ b.title }}</a>
+    — <a href="{% url 'book-edit' b.pk %}">edit</a>
+    — <a href="{% url 'book-delete' b.pk %}">delete</a>
+  </li>
+{% empty %}
+  <li>No books yet.</li>
+{% endfor %}
+</ul>
+<a href="{% url 'book-add' %}">Add book</a>
