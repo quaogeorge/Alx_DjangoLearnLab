@@ -34,4 +34,6 @@ urlpatterns = [
     path('admin-dashboard/', admin_dashboard, name='admin-dashboard'),
     path('librarian-dashboard/', librarian_dashboard, name='librarian-dashboard'),
     path('member-dashboard/', member_dashboard, name='member-dashboard'),
+    path('', include('relationship_app.urls')),
+    
 ]

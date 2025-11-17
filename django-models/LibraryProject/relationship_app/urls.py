@@ -1,10 +1,8 @@
 from django.urls import path
-from .views.admin_view import admin_dashboard
-from .views.librarian_view import librarian_dashboard
-from .views.member_view import member_dashboard
+from .views import admin_view, librarian_view, member_view
 
 urlpatterns = [
-    path('admin-dashboard/', admin_dashboard, name='admin-dashboard'),
-    path('librarian-dashboard/', librarian_dashboard, name='librarian-dashboard'),
-    path('member-dashboard/', member_dashboard, name='member-dashboard'),
+    path('admin-view/', admin_view, name='admin-view'),
+    path('librarian-view/', librarian_view, name='librarian-view'),
+    path('member-view/', member_view, name='member-view'),
 ]
