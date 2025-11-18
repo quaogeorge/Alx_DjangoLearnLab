@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import list_books
+from .views import add_book, edit_book, delete_book
 app_name = 'relationship_app'
 
 urlpatterns = [
