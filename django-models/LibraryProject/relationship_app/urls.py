@@ -1,17 +1,12 @@
 from django.urls import path
 from . import views
 
+app_name = 'relationship_app'
+
 urlpatterns = [
-    # Add Book
-    path('add_book/', views.add_book, name='add_book'),
+    # Function-based view: list all books
+    path('books/', views.list_books, name='list_books'),
 
-    # Edit Book
-    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),
-
-    # Delete Book (checker may not require this, but it's good to include)
-    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
-
-    # Optional: simple list and detail pages
-    path('books/', views.book_list, name='book_list'),
-    path('books/<int:pk>/', views.book_detail, name='book_detail'),
+    # Class-based view: library detail (expects a primary key)
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 ]
