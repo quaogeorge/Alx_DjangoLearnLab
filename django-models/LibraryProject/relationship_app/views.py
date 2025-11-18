@@ -7,8 +7,8 @@ def list_books(request):
     Function-based view that lists all books.
     Renders relationship_app/list_books.html with context {'books': books}
     """
-    # Use select_related to fetch author in the same query if Book.author is a ForeignKey
-    books = Book.objects.select_related('author').all()
+    # Use Book.objects.all() per your request
+    books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
 
