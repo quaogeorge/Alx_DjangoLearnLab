@@ -4,7 +4,7 @@ from .models import Book, Library
 
 def list_books(request):
     books = Book.objects.select_related('author').all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})
+    return render(request, 'Alx_DjangoLearnLab/Introduction_to_Django/LibraryProject/relationship_app/list_books.html', {'books': books})
 
 class LibraryListView(ListView):
     model = Library
@@ -18,3 +18,5 @@ class LibraryDetailView(DetailView):
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('books__author')
+
+
