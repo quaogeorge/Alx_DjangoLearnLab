@@ -20,4 +20,6 @@ urlpatterns = [
 
     path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
     path('', views.list_books, name='list_books'), 
+    path("add_book/" add_book, name ="add_book"),
+    path("edit_book", edit_book, name="edit_book")
 ]
