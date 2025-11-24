@@ -172,3 +172,32 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # - When developing locally on http://127.0.0.1:8000 you may set DEBUG = True and
 #   CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE = False to avoid needing HTTPS.
 # - In production use environment variables to control DEBUG and the cookie booleans.
+
+# ======================================
+# HTTPS SECURITY CONFIGURATION
+# ======================================
+
+# Force all traffic over HTTPS
+SECURE_SSL_REDIRECT = True   # Redirect HTTP → HTTPS
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000            # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True     # Apply to all subdomains
+SECURE_HSTS_PRELOAD = True                # Allow browser preload lists (Chrome, Firefox)
+
+# Secure cookies (cookies only sent over HTTPS)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Additional security headers
+X_FRAME_OPTIONS = 'DENY'                  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True        # Prevent MIME-type sniffing
+SECURE_BROWSER_XSS_FILTER = True          # Browser XSS protection
+
+# IMPORTANT FOR DEVELOPMENT:
+# When running locally (http://127.0.0.1:8000), HTTPS does NOT work.
+# You must set these to False while developing locally:
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# SECURE_HSTS_SECONDS = 0
