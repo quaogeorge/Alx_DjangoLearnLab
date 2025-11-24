@@ -34,3 +34,27 @@ Notes
 - Decorators used: @permission_required('bookshelf.can_edit', raise_exception=True)
 - If a user lacks permission, they will get a 403 (PermissionDenied). You can customize the view to redirect instead.
 - Superusers bypass permission checks.
+
+
+Security hardening applied
+--------------------------
+1. DEBUG set to False in production. Use environment variables to toggle locally.
+2. Cookies:
+   - CSRF_COOKIE_SECURE = True
+   - SESSION_COOKIE_SECURE = True
+   These ensure cookies are only sent over HTTPS.
+3. Browser protection headers:
+   - SECURE_BROWSER_XSS_FILTER = True
+   - X_FRAME_OPTIONS = 'DENY'
+   - SECURE_CONTENT_TYPE_NOSNIFF = True
+4. CSP:
+   - Implemented either with django-csp or custom middleware. See settings.py for values.
+5. CSRF:
+   - All form templates include {% csrf_token %}.
+   - AJAX requests must include X-CSRFToken header.
+6. SQL Injection:
+   - All DB access uses Django ORM or parameterized queries.
+   - User input is validated via Django Forms.
+7. Testing:
+   - Create users and attempt to access protected views as different roles.
+   - Use browser dev tools to verify CSP and other headers.

@@ -38,12 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf',
+    'csp',  # if using django-csp for Content Security Policy
     
 ]
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
+
+
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'LibraryProject.security_middleware.ContentSecurityPolicyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # if using django-csp
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -127,3 +133,42 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# SECURITY (production) - put these near the top or in a production-specific settings file
+DEBUG = False  # IMPORTANT: must be False in production. Use env vars to toggle in dev.
+
+# Allowed hosts must be set for production
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # add your host(s)
+
+# Browser protections
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'                      # prevents clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True            # prevents content type sniffing
+
+# Cookies: ensure cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Consider redirecting all HTTP to HTTPS in production
+SECURE_SSL_REDIRECT = True  # set True in production (requires HTTPS)
+
+# HSTS - only enable once you're sure HTTPS is working
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Content Security Policy: either use django-csp (recommended) or custom middleware.
+# Example django-csp values if using django-csp:
+# CSP_DEFAULT_SRC = ("'self'",)
+# CSP_SCRIPT_SRC = ("'self'",)
+# CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+# ... (more CSP rules as required)
+
+# MEDIA and STATIC stay as is (example)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# NOTE FOR DEVELOPMENT:
+# - When developing locally on http://127.0.0.1:8000 you may set DEBUG = True and
+#   CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE = False to avoid needing HTTPS.
+# - In production use environment variables to control DEBUG and the cookie booleans.

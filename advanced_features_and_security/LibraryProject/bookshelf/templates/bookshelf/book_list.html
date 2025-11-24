@@ -10,3 +10,10 @@
 {% endfor %}
 </ul>
 <a href="{% url 'book-add' %}">Add book</a>
+
+{% for book in books %}
+  <div class="book">
+    <h3>{{ book.title }}</h3>            {# auto-escaped #}
+    <p>Author: {{ book.author }}</p>
+  </div>
+{% endfor %}

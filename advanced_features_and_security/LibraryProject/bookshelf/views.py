@@ -4,6 +4,19 @@ from django.urls import reverse
 from .models import Book
 from .forms import BookForm
 
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+@login_required
+@permission_required('bookshelf.can_create', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def book_create(request):
+    # use BookForm (ModelForm) for validation
+    ...
+
+
+
 # List view: require can_view
 @login_required
 @permission_required('bookshelf.can_view', raise_exception=True)
@@ -46,3 +59,39 @@ def book_delete(request, pk):
         book.delete()
         return redirect(reverse('bookshelf:book_list'))
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
+
+from django.db.models import Q
+from django.shortcuts import render
+from .forms import BookSearchForm
+from .models import Book
+
+def book_search(request):
+    form = BookSearchForm(request.GET or None)
+    books = Book.objects.none()
+    if form.is_valid():
+        q = form.cleaned_data.get('q') or ''
+        # use ORM with parameterization (no string formatting)
+        books = Book.objects.filter(
+            Q(title__icontains=q) | Q(author__icontains=q)
+        )
+    return render(request, 'bookshelf/book_search.html', {'form': form, 'books': books})
+
+from .forms import SearchForm
+from django.db.models import Q
+from django.shortcuts import render
+
+def search_books(request):
+    form = SearchForm(request.GET or None)
+    books = []
+
+    if form.is_valid():
+        q = form.cleaned_data['q']
+        books = Book.objects.filter(
+            Q(title__icontains=q) |
+            Q(author__icontains=q)
+        )
+
+    return render(request, 'bookshelf/search_books.html', {
+        'form': form,
+        'books': books
+    })
