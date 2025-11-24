@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.urls import reverse
 from .models import Book
 from .forms import BookForm
+from .forms import ExampleForm
 
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required, permission_required
