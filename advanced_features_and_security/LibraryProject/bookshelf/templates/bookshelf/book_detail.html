@@ -1,0 +1,3 @@
+<h1>{{ book.title }}</h1>
+<p>Author: {{ book.author }}</p>
+<p><a href="{% url 'book-edit' book.pk %}">Edit</a> | <a href="{% url 'book-list' %}">Back</a></p>

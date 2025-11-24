@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .models import Book
+
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'published_date', 'created_by')
+    search_fields = ('title', 'author')
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
