@@ -194,6 +194,8 @@ X_FRAME_OPTIONS = 'DENY'                  # Prevent clickjacking
 SECURE_CONTENT_TYPE_NOSNIFF = True        # Prevent MIME-type sniffing
 SECURE_BROWSER_XSS_FILTER = True          # Browser XSS protection
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # IMPORTANT FOR DEVELOPMENT:
 # When running locally (http://127.0.0.1:8000), HTTPS does NOT work.
 # You must set these to False while developing locally:
