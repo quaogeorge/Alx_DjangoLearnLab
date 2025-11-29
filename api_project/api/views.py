@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework.generics, viewsets import generics, viewsets
+from rest_framework import generics, viewsets
 from .models import Book
 from .serializers import BookSerializer
 
