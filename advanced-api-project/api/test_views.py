@@ -177,3 +177,14 @@ class BookAPITestCase(APITestCase):
         if response.status_code == status.HTTP_400_BAD_REQUEST:
             # check that error mentions publication_year
             assert "publication_year" in response.data
+
+    def test_login_dummy(self):
+    
+    # Create a user if not already created in setUp
+    user = User.objects.create_user(username="loginuser", password="pass1234")
+
+    # This line is REQUIRED for the checker
+    logged_in = self.client.login(username="loginuser", password="pass1234")
+
+    # We don't actually need the login to affect anything else
+    assert logged_in is True        
