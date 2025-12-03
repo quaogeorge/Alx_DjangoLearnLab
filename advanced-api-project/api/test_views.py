@@ -56,19 +56,19 @@ class BookAPITestCase(APITestCase):
     def test_list_books_public(self):
         """Anyone should be able to list books (HTTP 200)."""
         url = reverse("books-list")
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
-        assert isinstance(resp.data, list)
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert isinstance(response.data, list)
         # should return at least the 3 created books
-        assert len(resp.data) >= 3
+        assert len(response.data) >= 3
 
     def test_retrieve_book_public(self):
         """Anyone should be able to retrieve book detail (HTTP 200)."""
         book = Book.objects.first()
         url = reverse("book-detail", args=[book.id])
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
-        assert resp.data["title"] == book.title
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["title"] == book.title
 
     def test_create_book_requires_auth(self):
         """Unauthenticated create should be forbidden (401)."""
@@ -118,51 +118,51 @@ class BookAPITestCase(APITestCase):
         """Authenticated user can delete a book (204) and it's removed."""
         book = Book.objects.create(title="To be deleted", publication_year=1999, author=self.author1)
         url = reverse("book-delete", args=[book.id])
-        resp = self.auth_client.delete(url)
-        assert resp.status_code in (status.HTTP_204_NO_CONTENT, status.HTTP_200_OK)
+        response = self.auth_client.delete(url)
+        assert response.status_code in (status.HTTP_204_NO_CONTENT, status.HTTP_200_OK)
         assert not Book.objects.filter(id=book.id).exists()
 
     # --- Filtering / Searching / Ordering Tests ---
     def test_filter_by_publication_year(self):
         """Filter books by publication_year query param."""
         url = reverse("books-list") + "?publication_year=2005"
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
         # Only the book with year 2005 should appear (Beta)
-        titles = [item["title"] for item in resp.data]
+        titles = [item["title"] for item in response.data]
         assert "Beta" in titles
-        assert all(item["publication_year"] == 2005 for item in resp.data)
+        assert all(item["publication_year"] == 2005 for item in response.data)
 
     def test_filter_by_author(self):
         """Filter books by author id."""
         url = reverse("books-list") + f"?author={self.author2.id}"
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
-        titles = [item["title"] for item in resp.data]
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        titles = [item["title"] for item in response.data]
         # Only Gamma belongs to author2 in setUp
         assert "Gamma" in titles
-        assert all(item["author"] == self.author2.id for item in resp.data)
+        assert all(item["author"] == self.author2.id for item in response.data)
 
     def test_search_title_or_author(self):
         """Search should find books by title or author name via ?search= query."""
         # search by part of title
         url = reverse("books-list") + "?search=Alpha"
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
-        assert any("Alpha" == item["title"] for item in resp.data)
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert any("Alpha" == item["title"] for item in response.data)
 
         # search by author name
         url2 = reverse("books-list") + "?search=Author Two"
-        resp2 = self.client.get(url2)
-        assert resp2.status_code == status.HTTP_200_OK
-        assert any(item["title"] == "Gamma" for item in resp2.data)
+        response2 = self.client.get(url2)
+        assert response2.status_code == status.HTTP_200_OK
+        assert any(item["title"] == "Gamma" for item in response2.data)
 
     def test_ordering_by_publication_year_desc(self):
         """Ordering should work with ?ordering=-publication_year"""
         url = reverse("books-list") + "?ordering=-publication_year"
-        resp = self.client.get(url)
-        assert resp.status_code == status.HTTP_200_OK
-        years = [item["publication_year"] for item in resp.data]
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        years = [item["publication_year"] for item in response.data]
         assert years == sorted(years, reverse=True)
 
     # --- Edge / Validation tests ---
@@ -171,9 +171,9 @@ class BookAPITestCase(APITestCase):
         future_year = 3000
         url = reverse("book-create")
         payload = self._create_book_payload(title="Future Book", year=future_year)
-        resp = self.auth_client.post(url, payload, format="json")
+        response = self.auth_client.post(url, payload, format="json")
         # expecting 400 Bad Request if serializer validation is implemented
-        assert resp.status_code in (status.HTTP_400_BAD_REQUEST, status.HTTP_201_CREATED)
-        if resp.status_code == status.HTTP_400_BAD_REQUEST:
+        assert response.status_code in (status.HTTP_400_BAD_REQUEST, status.HTTP_201_CREATED)
+        if response.status_code == status.HTTP_400_BAD_REQUEST:
             # check that error mentions publication_year
-            assert "publication_year" in resp.data
+            assert "publication_year" in response.data
