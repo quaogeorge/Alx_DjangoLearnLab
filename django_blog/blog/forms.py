@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
+from .models import Post
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -21,3 +23,12 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ("bio", "avatar")
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']  # author & published_date handled server-side
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Post title'}),
+            'content': forms.Textarea(attrs={'rows': 10, 'placeholder': 'Write your post...'}),
+        }
