@@ -1,19 +1,23 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from .forms import CustomUserCreationForm, ProfileForm
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post
-from .forms import PostForm
-from django.shortcuts import redirect, get_object_or_404, render
-from django.urls import reverse_lazy, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView
+)
+from django.urls import reverse, reverse_lazy
 
+from .models import Post, Comment
+from .forms import (
+    CustomUserCreationForm,
+    ProfileForm,
+    PostForm,
+    CommentForm
+)
+
+from .models import Post, Comment
+from .forms import CommentForm
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -140,3 +144,32 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.get_object().author == self.request.user    
+    
+# add this CommentCreateView class to blog/views.py
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'   # create this template if you haven't
+    # you can optionally set success_url here, but we build it dynamically
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Capture post_id from URL and store the Post instance for use in form_valid.
+        """
+        self.post = get_object_or_404(Post, pk=kwargs.get('post_id'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """
+        Fill in author and post before saving.
+        """
+        form.instance.author = self.request.user
+        form.instance.post = self.post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """
+        After creating a comment, redirect back to the post detail.
+        """
+        return self.post.get_absolute_url() + '#comment-{}'.format(self.object.pk)
