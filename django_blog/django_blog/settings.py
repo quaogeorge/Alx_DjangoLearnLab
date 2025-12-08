@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
@@ -52,13 +52,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_blog.urls'
 
+# templates: ensure APP_DIRS True (so blog/templates/ is found)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [],   # you can add BASE_DIR / 'templates' here if you want global templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # default context processors (make sure these exist)
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -66,6 +69,15 @@ TEMPLATES = [
         },
     },
 ]
+
+# Redirects after login/logout
+LOGIN_REDIRECT_URL = 'blog:profile'
+LOGOUT_REDIRECT_URL = 'blog:login'
+LOGIN_URL = 'blog:login'
+
+# If you plan to use avatars (ImageField), add MEDIA settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 WSGI_APPLICATION = 'django_blog.wsgi.application'
 
