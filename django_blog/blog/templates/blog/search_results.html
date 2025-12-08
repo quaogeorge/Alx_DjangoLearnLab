@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<h1>Search results</h1>
+
+{% if posts %}
+  {% for post in posts %}
+    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+    <p>{{ post.content|truncatechars:200 }}</p>
+  {% endfor %}
+{% else %}
+  <p>No posts match your search.</p>
+{% endif %}
+{% endblock %}

@@ -37,10 +37,29 @@ class ProfileForm(forms.ModelForm):
         fields = ("bio", "avatar")
 
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(
+        required=False,
+        help_text="Add tags separated by commas (e.g. django, python)"
+    )
+
     class Meta:
         model = Post
-        fields = ['title', 'content']  # author & published_date handled server-side
-        widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Post title'}),
-            'content': forms.Textarea(attrs={'rows': 10, 'placeholder': 'Write your post...'}),
-        }
+        fields = ['title', 'content', 'tags']
+
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        if commit:
+            post.save()
+
+        tag_names = self.cleaned_data["tags"]
+        tag_list = [t.strip() for t in tag_names.split(',') if t.strip()]
+
+        # Clear old tags
+        post.tags.clear()
+
+        # Create or get existing tags
+        for tag_name in tag_list:
+            tag_obj, _ = Tag.objects.get_or_create(name=tag_name.lower())
+            post.tags.add(tag_obj)
+
+        return post

@@ -18,6 +18,23 @@ from .forms import (
 
 from .models import Post, Comment
 from .forms import CommentForm
+from django.db.models import Q
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = "blog/search_results.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        if not query:
+            return Post.objects.none()
+
+        return Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -85,6 +102,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+    def get_initial(self):
+    initial = super().get_initial()
+    initial["tags"] = ", ".join(tag.name for tag in self.get_object().tags.all())
+    return initial
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -173,3 +194,10 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         After creating a comment, redirect back to the post detail.
         """
         return self.post.get_absolute_url() + '#comment-{}'.format(self.object.pk)
+
+def posts_by_tag(request, tag_name):
+    posts = Post.objects.filter(tags__name=tag_name)
+    return render(request, "blog/posts_by_tag.html", {
+        "posts": posts,
+        "tag": tag_name
+    })

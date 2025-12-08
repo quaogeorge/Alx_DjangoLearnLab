@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <title>{% block title %}Django Blog{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'blog/css/main.css' %}">
+
+  <form action="{% url 'blog:search' %}" method="get">
+    <input type="text" name="q" placeholder="Search posts...">
+  </form>
 </head>
 <body>
   <header>
