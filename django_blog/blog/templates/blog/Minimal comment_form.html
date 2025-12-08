@@ -1,0 +1,9 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+  <h1>Edit comment</h1>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+  <p><a href="{{ object.post.get_absolute_url }}">Back to post</a></p>
+{% endblock %}
