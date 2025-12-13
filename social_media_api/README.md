@@ -9,3 +9,14 @@ Simple Django REST API that implements user registration, login (token), and bas
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
+
+POST /api/posts/
+GET /api/posts/
+GET /api/posts/{id}/
+PATCH /api/posts/{id}/
+DELETE /api/posts/{id}/
+
+POST /api/comments/
+GET /api/comments/
+PATCH /api/comments/{id}/
+DELETE /api/comments/{id}/   
