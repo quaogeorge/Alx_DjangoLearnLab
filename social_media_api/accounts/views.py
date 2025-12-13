@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from django.contrib.auth import get_user_model
+
+CustomUser = get_user_model()
 
 User = get_user_model()
 
