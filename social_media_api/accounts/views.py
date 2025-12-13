@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 
 User = get_user_model()
+CustomUser.objects.all()
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
