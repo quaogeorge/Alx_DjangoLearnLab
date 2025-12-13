@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import FollowUserView, UnfollowUserView
 from .views import RegisterView, LoginView, ProfileView
 from rest_framework.authtoken import views as drf_views
 
@@ -8,4 +9,7 @@ urlpatterns = [
     # optional: DRF's built-in token obtain (username/password -> token)
     path('token/', drf_views.obtain_auth_token, name='api_token_auth'),
     path('profile/', ProfileView.as_view(), name='profile'),
+
+    path('follow/<int:user_id>/', FollowUserView.as_view(), name='follow-user'),
+    path('unfollow/<int:user_id>/', UnfollowUserView.as_view(), name='unfollow-user'),
 ]
