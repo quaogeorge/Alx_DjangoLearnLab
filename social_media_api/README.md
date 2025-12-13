@@ -20,3 +20,12 @@ POST /api/comments/
 GET /api/comments/
 PATCH /api/comments/{id}/
 DELETE /api/comments/{id}/   
+
+### Follow Users
+POST /api/accounts/follow/{user_id}/
+POST /api/accounts/unfollow/{user_id}/
+
+### Feed
+GET /api/feed/
+Returns posts from users the authenticated user follows.
+Posts are ordered from newest to oldest.
