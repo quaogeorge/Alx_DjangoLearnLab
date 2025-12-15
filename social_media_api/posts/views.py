@@ -89,7 +89,13 @@ class UnlikePostView(APIView):
         try:
             like = Like.objects.get(user=request.user, post_id=pk)
         except Like.DoesNotExist:
-            return Response({"detail": "Like not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Like not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         like.delete()
-        return Response({"detail": "Post unliked"}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "Post unliked"},
+            status=status.HTTP_200_OK
+        )
