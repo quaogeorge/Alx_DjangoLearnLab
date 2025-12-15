@@ -29,3 +29,21 @@ POST /api/accounts/unfollow/{user_id}/
 GET /api/feed/
 Returns posts from users the authenticated user follows.
 Posts are ordered from newest to oldest.
+
+## Deployment
+
+The Social Media API is deployed on Heroku.
+
+### Live URL
+https://social-media-api-kojo.herokuapp.com
+
+### Deployment Steps
+- Configured Django for production
+- Used Gunicorn as WSGI server
+- Used WhiteNoise for static files
+- PostgreSQL database via Heroku
+- Environment variables for secrets
+
+### Maintenance
+- Logs monitored via Heroku dashboard
+- Dependencies updated via requirements.txt
